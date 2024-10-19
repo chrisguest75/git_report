@@ -8,6 +8,7 @@ pyyaml = "*"
 python-json-logger = "*"
 python-dotenv = "*"
 textual = "*"
+gitpython = "*"
 
 [dev-packages]
 flake8 = "*"

@@ -46,7 +46,6 @@ Reasons:
 
 TODO:
 
-- Write a python TUI tool that given a path will list directories that are git repos and show me useful stats as I highlight them.
 - Setup the repo correctly
   - license
   - codeowners
