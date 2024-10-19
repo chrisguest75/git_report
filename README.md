@@ -50,7 +50,6 @@ TODO:
 - Setup the repo correctly
   - license
   - codeowners
-  - extensions
 - Add a pipeline
 - Make the tool installable through brew and apt.
 

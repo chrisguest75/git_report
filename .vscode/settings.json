@@ -1,4 +1,5 @@
 {
+  "conventionalCommits.autoCommit": false,
   "python.formatting.provider": "black",
   // format on save
   "editor.formatOnSave": true,
