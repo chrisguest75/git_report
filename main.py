@@ -13,8 +13,9 @@ from textual.reactive import reactive
 from textual import events
 
 from git import Repo
+import humanize
 
-def get_git_stats(path: str) -> str:
+def get_repo_statistics(path: str) -> str:
         # search up for a .git directory
     if not os.path.exists(path):
         return ([f"Path {path} does not exist"], [], [])
@@ -25,32 +26,33 @@ def get_git_stats(path: str) -> str:
     if not os.path.exists(f"{path}/.git"):
         return ([f"Path {path} is not a git repository"], [], [])
 
-    details_lines = [f"path: {path}"]
+    details_lines = []
     commits_lines = []
     untracked_lines = []
     try:
         repo = Repo(path)
-        details_lines.append(f"working_dir: {repo.working_dir}")
+        details_lines.append(f"path:           {path}")
+        details_lines.append(f"working_dir:    {repo.working_dir}")
+        details_lines.append(f"")
+
         default_branch = repo.git.symbolic_ref('refs/remotes/origin/HEAD').split('/')[-1]
         details_lines.append(f"default_branch: {default_branch}")
-        details_lines.append(f"active_branch: {repo.active_branch}")
-        head_commit = repo.git.rev_parse(default_branch)
-        details_lines.append(f"head_commit: {head_commit}")
-        details_lines.append(f"Dirty: {repo.is_dirty()}")
+        details_lines.append(f"active_branch:  {repo.active_branch}")
+        details_lines.append(f"")
 
-        commits_lines.append("Last 5 commits:")
-        commits = list(repo.iter_commits(repo.active_branch, max_count=5))
+        head_commit = repo.git.rev_parse(default_branch)
+        details_lines.append(f"head_commit:    {head_commit}")
+        details_lines.append(f"dirty:          {repo.is_dirty()}")
+
+        commits = list(repo.iter_commits(repo.active_branch, max_count=20))
         for commit in commits:
-            commits_lines.append(f"Commit: {commit.hexsha}")
-            commits_lines.append(f"Author: {commit.author.name} <{commit.author.email}>")
-            commits_lines.append(f"Date: {commit.committed_datetime}")
-            commits_lines.append(f"Message: {commit.message}")
+            commits_lines.append(f"{humanize.naturaltime(commit.committed_datetime):<15} {commit.hexsha[:8]} {commit.author.name} <{commit.author.email}> {commit.message.splitlines()[0]:<100}")
 
         if repo.is_dirty():
             for item in repo.untracked_files:
-                untracked_lines.append(f"Untracked file: {item}")
+                untracked_lines.append(f"{item}")
     except:
-        details_lines.append("Error reading git repository")
+        details_lines.append(f"Error reading git repository {path}")
 
     return (details_lines, commits_lines, untracked_lines)
 
@@ -62,8 +64,12 @@ class MyDirectoryTree(DirectoryTree):
         # Initial setup or when mounted
         # self.path = "./"
         self.show_root = False  # Example: Set show_root to False
-        for child in self.root.children:
-            child.allow_expand = False 
+
+        for child in enumerate(self.root.children):
+            child[1].allow_expand = False 
+            if child[0] == 0:
+                #self..focus(child[1])
+                child[1]._selected = True
 
     def on_key(self, event: events.Key) -> None:
         # Example: Toggle show_root on key press
@@ -94,6 +100,7 @@ class GitReportApp(App):
     }
 
     #commits {
+        outline: solid black;
         tint: magenta 10%;
         row-span: 2;
         column-span: 2;
@@ -101,15 +108,19 @@ class GitReportApp(App):
     #directory_tree {
         row-span: 5;
         column-span: 1;
+        padding: 1 2;
     }
     #details {
+        outline: solid black;
         tint: green 10%;
         row-span: 1;
         column-span: 2;
+        text-style: bold;
     }
     #untracked {
+        outline: solid black;
         tint: green 10%;
-        row-span: 1;
+        row-span: 2;
         column-span: 2;
     }
 
@@ -147,7 +158,7 @@ class GitReportApp(App):
 
         nodepath = os.path.join(self.path, str(node.label))
         
-        stats = get_git_stats(nodepath)
+        stats = get_repo_statistics(nodepath)
 
         details = Syntax('\n'.join(stats[0]), "text", theme="monokai")
         self.details.update(details)

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6f8e5b361ad3b23f61576372ebf3dd5b2c7cf4feb5e4b2e2995235766da64be8"
+            "sha256": "bde13e0ada50cc7f014a144012976a5755a07cdbe8e106a3cac18a9cf7a51a34"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -32,6 +32,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==3.1.43"
+        },
+        "humanize": {
+            "hashes": [
+                "sha256:b53caaec8532bcb2fff70c8826f904c35943f8cecaca29d272d9df38092736c0",
+                "sha256:e66f36020a2d5a974c504bd2555cf770621dbdbb6d82f94a6857c0b1ea2608be"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==4.11.0"
         },
         "linkify-it-py": {
             "hashes": [
