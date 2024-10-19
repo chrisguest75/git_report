@@ -21,6 +21,7 @@ NOTE: This repo has switched to [conventional commits](https://www.conventionalc
     - [Single step](#single-step)
       - [Application](#application)
       - [Tests](#tests)
+  - [Resources](#resources)
 
 ## Conventional Commits
 
@@ -51,6 +52,8 @@ TODO:
   - codeowners
 - Add a pipeline
 - Make the tool installable through brew and apt.
+- Filter out files in the directorytree
+- Fix the icons to be folders when disabling expand
 
 ## Prepare
 
@@ -123,3 +126,7 @@ pipenv run python
 
 - Configure pytest using the beaker icon in `vscode`
 - You can run and debug the discovered tests
+
+## Resources
+
+- https://textual.textualize.io/widget_gallery/
