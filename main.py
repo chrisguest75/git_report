@@ -35,22 +35,35 @@ def get_repo_statistics(path: str) -> str:
         details_lines.append(f"working_dir:    {repo.working_dir}")
         details_lines.append(f"")
 
-        default_branch = repo.git.symbolic_ref('refs/remotes/origin/HEAD').split('/')[-1]
-        details_lines.append(f"default_branch: {default_branch}")
+        #default_branch = repo.git.symbolic_ref('refs/remotes/origin/head').split('/')[-1]
+        #details_lines.append(f"default_branch: {default_branch}")
         details_lines.append(f"active_branch:  {repo.active_branch}")
         details_lines.append(f"")
 
-        head_commit = repo.git.rev_parse(default_branch)
-        details_lines.append(f"head_commit:    {head_commit}")
+        #head_commit = repo.git.rev_parse(default_branch)
+        #details_lines.append(f"head_commit:    {head_commit}")
         details_lines.append(f"dirty:          {repo.is_dirty()}")
+
+        details_lines.append(f"branches:")
+        for item in repo.branches:
+            details_lines.append(f"                {item}")
+
 
         commits = list(repo.iter_commits(repo.active_branch, max_count=20))
         for commit in commits:
             commits_lines.append(f"{humanize.naturaltime(commit.committed_datetime):<15} {commit.hexsha[:8]} {commit.author.name} <{commit.author.email}> {commit.message.splitlines()[0]:<100}")
 
+
         if repo.is_dirty():
             for item in repo.untracked_files:
                 untracked_lines.append(f"{item}")
+
+            # unstaged_files = [item.a_path for item in repo.git.diff(None, name_only=True).splitlines()]
+            # for item in unstaged_files:
+            #     untracked_lines.append(f"{item}")
+            # else:
+            #     untracked_lines.append(f"Nothing unstaged")
+
     except:
         details_lines.append(f"Error reading git repository {path}")
 
