@@ -54,6 +54,10 @@ TODO:
 - Make the tool installable through brew and apt.
 - Filter out files in the directorytree
 - Fix the icons to be folders when disabling expand
+- Sparklines for activity
+- Titles for the boxes
+- Columns in the boxes
+- Go get PRs on github
 
 ## Prepare
 
